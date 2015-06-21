@@ -5,7 +5,7 @@ var hp;
 var body;
 var level;
 var points;
-var refPoints;
+var totalBalloons;
 var objective;
 var process;
 const POINTS_PER_BALLOON = 100;
@@ -24,6 +24,7 @@ function startGame() {
     document.getElementById("level").innerHTML = level;
     objective = 10 + level*5;
     process = 0;
+    totalBalloons = 0;
     balloonGeneratingInterval = setInterval(function() {
         process++;
         newBalloon();
@@ -78,7 +79,7 @@ function createBalloonDiv(id) {
 
 function createBalloonImg() {
     var img = document.createElement("IMG");
-    img.src = "balloon.png";
+    img.src = "img/balloon.png";
     return img;
 }
 
@@ -88,14 +89,15 @@ function clicked(el) {
     var balloon = el.firstChild;
     if (lives[num]==0) {
         lives[num] = -1;
-        balloon.src = "bang.png";
+        balloon.src = "img/bang.png";
         clearInterval(intervals[num]);
         setTimeout( function () {
             el.style.display = "none";
         }, 500);
         points += POINTS_PER_BALLOON;
         document.getElementById("points").innerHTML = points;
-        if (points - refPoints == objective*POINTS_PER_BALLOON) endGame();
+        totalBalloons++;
+        if (totalBalloons == objective) endGame();
     } else if (lives[num]>0) {
         lives[num]--;
         createDamageMark(el.style.left, el.style.top);
@@ -123,6 +125,7 @@ function createDamageMark(x, y) {
 
 function playerLostLife() {
     var hp = Number(document.getElementById("hpLeft").innerHTML);
+    totalBalloons++;
     hp--;
     document.getElementById("hpLeft").innerHTML = (hp-1);
 }
