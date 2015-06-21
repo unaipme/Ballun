@@ -34,8 +34,12 @@ function startGame() {
 
 function endGame() {
     document.getElementById("button").disabled = false;
-    level++;
-    refPoints = points;
+    if (hp>0) level++;
+    else {
+        level = 0;
+        points = 0;
+        hp = 5;
+    }
 }
 
 function newBalloon() {
@@ -51,8 +55,10 @@ function newBalloon() {
     lives[num] = Math.floor(Math.random() * 5);
     intervals[num] = setInterval( function () {
         var el = document.getElementById(id);
-        if (el.style.top=="-25px") {
+        if (el.style.top=="0px") el.style.opacity="0.0";
+        else if (el.style.top=="-25px") {
             playerLostLife();
+            setTimeout( function() { el.style.display = "none";}, 1100);
             var ref = Number(id.substr(id.length - 1, id.length));
             clearInterval(intervals[ref]);
             intervals[ref] = null;
@@ -67,6 +73,7 @@ function createBalloonDiv(id) {
     parent.style.position = "relative";
     parent.style.width = "25px";
     parent.style.height = "25px";
+    parent.style.opacity = "0.0";
     var top = Number(body.style.height.substr(0, body.style.height.length - 2));
     console.log(top);
     parent.style.top = top + "px";
@@ -74,6 +81,9 @@ function createBalloonDiv(id) {
     parent.style.left = rand+"px";
     parent.appendChild(createBalloonImg());
     parent.onclick = function() {clicked(parent);} ;
+    setTimeout(function() {
+        parent.style.opacity="1.0";
+    }, 500);
     return parent;
 }
 
@@ -127,5 +137,6 @@ function playerLostLife() {
     var hp = Number(document.getElementById("hpLeft").innerHTML);
     totalBalloons++;
     hp--;
-    document.getElementById("hpLeft").innerHTML = (hp-1);
+    document.getElementById("hpLeft").innerHTML = (hp);
+    if (hp <= 0 || totalBalloons==objective) endGame();
 }

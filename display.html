@@ -5,6 +5,13 @@
         <title>Ballun</title>
         <script src="main.js"></script>
         <style type="text/css">
+            div[id^=balloon] {
+                -webkit-transition: opacity 1s;
+                -moz-transition: opacity 1s;
+                -ms-transition: opacity 1s;
+                -o-transition: opacity 1s;
+                transition: opacity 1s;
+            }
         </style>
     </head>
     <body onLoad="init(document.getElementById('frame'))">
