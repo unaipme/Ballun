@@ -5,17 +5,26 @@
         <title>Ballun</title>
         <script src="main.js"></script>
         <style type="text/css">
-            #frame {
-                width: 500px;
-                height: 200px;
-                border: 1px solid black;
-            }
         </style>
     </head>
     <body onLoad="init(document.getElementById('frame'))">
         <div id="frame" style="width:500px;height:200px;border:1px solid black;">
 
         </div>
-        <h3>Vidas: <span id="hpLeft">5</span></h3>
+        <table id="infoTable" style="width:500px">
+            <colgroup>
+                <col style="width:33%" />
+                <col style="width:33%" />
+                <col style="width:33%" />
+            </colgroup>
+            <tr>
+                <td><h3>Vidas: <span id="hpLeft">5</span></h3></td>
+                <td><h3>Puntos: <span id="points">0</span></h3></td>
+                <td><h3>Nivel: <span id="level">0</span></h3></td>
+            </tr>
+            <tr>
+                <td colspan="3"><input type="button" id="button" value="Empezar" onClick="startGame()" /></td>
+            </tr>
+        </table>
     </body>
 </html>
