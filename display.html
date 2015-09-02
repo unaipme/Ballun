@@ -12,12 +12,27 @@
                 -o-transition: opacity 1s;
                 transition: opacity 1s;
             }
+            #painIndicator{
+                background-color:#f00;
+                opacity:0.0;
+                width:500px;
+                height:200px;
+                position:absolute;
+                left:9px;
+                top:9px;
+            }
+            /*
+            #frame {
+                width:500px;
+                height:200px;
+                border:1px solid black;
+                background-color:transparent;
+            }*/
         </style>
     </head>
     <body onLoad="init(document.getElementById('frame'))">
-        <div id="frame" style="width:500px;height:200px;border:1px solid black;">
-
-        </div>
+        <div id="painIndicator"></div>
+        <div id="frame" style="width:500px;height:200px;border:1px solid black;background-color:transparent;"></div>
         <table id="infoTable" style="width:500px">
             <colgroup>
                 <col style="width:33%" />

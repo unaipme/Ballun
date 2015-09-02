@@ -8,6 +8,7 @@ var points;
 var totalBalloons;
 var objective;
 var process;
+var painIndicator;
 const POINTS_PER_BALLOON = 100;
 const ID = "balloon";
 
@@ -15,7 +16,6 @@ function init(p) {
     body = (p || document.getElementsByTagName("BODY")[0]);
     level= 0;
     points = 0;
-    refPoints = 0;
     hp = 5;
 }
 
@@ -28,7 +28,7 @@ function startGame() {
     balloonGeneratingInterval = setInterval(function() {
         process++;
         newBalloon();
-        if (process==objective) clearInterval((balloonGeneratingInterval));
+        if (process==objective) clearInterval(balloonGeneratingInterval);
     }, 1000-level*50);
 }
 
@@ -50,9 +50,9 @@ function newBalloon() {
     div.style.height = "0px";
     div.style.position="relative";
     div.className="balloonContainer";
-    div.appendChild(createBalloonDiv(id))
-    body.appendChild(div);
     lives[num] = Math.floor(Math.random() * 5);
+    div.appendChild(createBalloonDiv(id, lives[num]));
+    body.appendChild(div);
     intervals[num] = setInterval( function () {
         var el = document.getElementById(id);
         if (el.style.top=="0px") el.style.opacity="0.0";
@@ -67,19 +67,26 @@ function newBalloon() {
     }, 40-level);
 }
 
-function createBalloonDiv(id) {
+function createBalloonDiv(id, lives) {
     var parent = document.createElement("DIV");
     parent.id = id;
     parent.style.position = "relative";
     parent.style.width = "25px";
     parent.style.height = "25px";
     parent.style.opacity = "0.0";
+    parent.style.color = "white";
+    parent.style.fontSize = "11px";
+    parent.style.boxSizing = "border-box";
+    parent.style.paddingTop = "3px";
+    parent.style.paddingLeft = "5px";
+    parent.style.cursor = "default";
+    parent.innerHTML = lives + 1;
     var top = Number(body.style.height.substr(0, body.style.height.length - 2));
     console.log(top);
     parent.style.top = top + "px";
-    var rand = Math.floor(Math.random() * Number(body.style.width.substr(0, body.style.width.length-2)))
+    var rand = Math.floor(Math.random() * Number(body.style.width.substr(0, body.style.width.length-2)));
     parent.style.left = rand+"px";
-    parent.appendChild(createBalloonImg());
+    parent.style.backgroundImage = "url(img/balloon.png)";
     parent.onclick = function() {clicked(parent);} ;
     setTimeout(function() {
         parent.style.opacity="1.0";
@@ -87,19 +94,13 @@ function createBalloonDiv(id) {
     return parent;
 }
 
-function createBalloonImg() {
-    var img = document.createElement("IMG");
-    img.src = "img/balloon.png";
-    return img;
-}
-
 function clicked(el) {
     var id = el.id;
     var num = id.substr(7, id.length);
-    var balloon = el.firstChild;
     if (lives[num]==0) {
         lives[num] = -1;
-        balloon.src = "img/bang.png";
+        el.innerHTML = "";
+        el.style.backgroundImage = "url(img/bang.png)";
         clearInterval(intervals[num]);
         setTimeout( function () {
             el.style.display = "none";
@@ -110,6 +111,7 @@ function clicked(el) {
         if (totalBalloons == objective) endGame();
     } else if (lives[num]>0) {
         lives[num]--;
+        el.innerHTML = lives[num] + 1;
         createDamageMark(el.style.left, el.style.top);
     }
 }
@@ -125,7 +127,7 @@ function createDamageMark(x, y) {
     div.style.width = "30px";
     div.style.height = "30px";
     div.innerHTML = "-1";
-    div.className="damageMark";
+    div.className = "damageMark";
     div.id = "damageMark"+num;
     body.appendChild(div);
     setTimeout(function() {
@@ -137,6 +139,12 @@ function playerLostLife() {
     var hp = Number(document.getElementById("hpLeft").innerHTML);
     totalBalloons++;
     hp--;
-    document.getElementById("hpLeft").innerHTML = (hp);
+    document.getElementById("painIndicator").style.opacity = "1.0";
+    painIndicator = setInterval(function() {
+        var el = document.getElementById("painIndicator");
+        if (el.style.opacity == 0.0) clearInterval(painIndicator);
+        else el.style.opacity -= 0.1;
+    }, 10);
+    document.getElementById("hpLeft").innerHTML = hp.toString();
     if (hp <= 0 || totalBalloons==objective) endGame();
 }
